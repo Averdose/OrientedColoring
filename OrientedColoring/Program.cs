@@ -11,11 +11,24 @@ namespace OrientedColoring
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Input graph file name:");
-            var filename = Console.ReadLine();
-            Console.WriteLine("Reading from file: " + filename);
-
-            Console.ReadKey();
+            while (true)
+            {
+                Console.WriteLine("Input graph file name:");
+                var filename = Console.ReadLine();
+                Console.WriteLine("Reading from file: " + filename);
+                Graph graph = null;
+                try
+                {
+                    graph = new Graph(filename);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Encoutered exception: " + e.Message);
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                }
+                Console.WriteLine("Created graph with " + graph.VerticesCount + " vertices and " + graph.EdgesCount + " edges.");
+            }
 
         }
     }
