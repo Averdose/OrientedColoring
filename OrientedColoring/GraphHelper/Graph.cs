@@ -10,14 +10,13 @@ namespace OrientedColoring.GraphHelper
     public class Graph
     {
         private List<Edge>[] _matrix;
+        public int[] ColorsMatrix { get; set; }
         public int EdgesCount { get; private set; }
-        public int VerticesCount { get; }
+        public int VerticesCount { get; private set; }
 
         public Graph(int vertices)
         {
-            VerticesCount = vertices;
-            _matrix = new List<Edge>[vertices];
-            InitializeMatrix(vertices);
+            InitializeGraph(vertices);
         }
 
         public Graph(string filename)
@@ -36,9 +35,8 @@ namespace OrientedColoring.GraphHelper
                 {
                     if(line == 0)
                     {
-                        VerticesCount = int.Parse(s);
-                        _matrix = new List<Edge>[VerticesCount];
-                        InitializeMatrix(VerticesCount);
+                        int verticesCount = int.Parse(s);
+                        InitializeGraph(verticesCount);
                     }
                     else if (line ==  1)
                     {
@@ -68,41 +66,57 @@ namespace OrientedColoring.GraphHelper
                 }
             }
 
-
         }
 
-        private void InitializeMatrix(int vertices)
+        public bool IsColoringValid()
         {
+            int c = VerticesCount;
+            bool[,] colors = new bool[VerticesCount, VerticesCount];
+            List<Edge> edges = Edges();
+            foreach(Edge e in edges)
+            {
+                int fromColor = this.ColorsMatrix[e.From];
+                int toColor = this.ColorsMatrix[e.To];
+                if (fromColor == toColor) return false;
+                if (colors[toColor, fromColor]) return false;
+                colors[fromColor, toColor] = true;
+            }
+            return true;
+        }
+
+        private void InitializeGraph(int vertices)
+        {
+            VerticesCount = vertices;
+            _matrix = new List<Edge>[vertices];
+            ColorsMatrix = new int[vertices];
             for (int i = 0; i < vertices; i++)
             {
                 _matrix[i] = new List<Edge>();
+                ColorsMatrix[i] = i;
             }
         }
 
         public bool AddEdge(int from, int to, double weight = 1)
         {
             if (weight == 0) return false;
-            if (_matrix[from].Any(e => e.To == to)
-                || _matrix[to].Any(e => e.From == from)) return false;
+            if (_matrix[from].Any(e => e.To == to)) return false;
             _matrix[from].Add(new Edge(from, to, weight));
-            _matrix[to].Add(new Edge(to, from, weight));
             EdgesCount++;
             return true;
         }
 
-        public Graph Clone()
-        {
-            var graph = new Graph(VerticesCount);
-            foreach (var edges in _matrix)
-            {
-                edges.ForEach(e => graph.AddEdge(e.From, e.To, e.Weight));
-            }
-            return graph;
-        }
-
-        public IEnumerable<Edge> OutEdges(int from)
+        public List<Edge> OutEdges(int from)
         {
             return _matrix[from];
+        }
+
+        public List<Edge> Edges()
+        {
+            var edges = new List<Edge>();
+            for(int i = 0; i< VerticesCount; i++) {
+                edges = edges.Concat(_matrix[i]).ToList<Edge>();
+            }
+            return edges;
         }
     }
 }
