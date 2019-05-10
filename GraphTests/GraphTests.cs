@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OrientedColoring;
 using OrientedColoring.GraphHelper;
 
 namespace OrientedColoringTests
@@ -63,6 +64,21 @@ namespace OrientedColoringTests
         }
 
         [TestMethod]
+        public void IsColoringWithANegativeColorValid()
+        {
+            Graph g = new Graph(4);
+            g.AddEdge(0, 1);
+            g.AddEdge(1, 2);
+            g.AddEdge(2, 3);
+            g.AddEdge(3, 1);
+            g.ColorsMatrix[0] = 0;
+            g.ColorsMatrix[1] = 1;
+            g.ColorsMatrix[2] = 2;
+            g.ColorsMatrix[3] = -1;
+            Assert.IsFalse(g.IsColoringValid());
+        }
+
+        [TestMethod]
         public void IsBadDirectedColoringValid()
         {
             Graph g = new Graph(4);
@@ -86,6 +102,32 @@ namespace OrientedColoringTests
             g.AddEdge(2, 3);
             g.AddEdge(3, 1);
             g.BFSDirectedColoring();
+            Assert.IsTrue(g.IsColoringValid());
+        }
+
+        [TestMethod]
+        public void IsBreadthDirectedColoringValid()
+        {
+            Graph g = new Graph(4);
+            g.AddEdge(0, 1);
+            g.AddEdge(1, 2);
+            g.AddEdge(2, 3);
+            g.AddEdge(3, 1);
+            int[] coloring = BreadthColoring.Solve(g);
+            g.ColorsMatrix = coloring;
+            Assert.IsTrue(g.IsColoringValid());
+        }
+
+        [TestMethod]
+        public void IsSmallestLastDirectedColoringValid()
+        {
+            Graph g = new Graph(4);
+            g.AddEdge(0, 1);
+            g.AddEdge(1, 2);
+            g.AddEdge(2, 3);
+            g.AddEdge(3, 1);
+            int[] coloring = SmallestLast.Solve(g);
+            g.ColorsMatrix = coloring;
             Assert.IsTrue(g.IsColoringValid());
         }
 

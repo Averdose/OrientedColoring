@@ -73,6 +73,10 @@ namespace OrientedColoring.GraphHelper
             int c = VerticesCount;
             bool[,] colors = new bool[VerticesCount, VerticesCount];
             List<Edge> edges = Edges();
+            foreach(int color in this.ColorsMatrix)
+            {
+                if (color < 0) return false;
+            }
             foreach(Edge e in edges)
             {
                 int fromColor = this.ColorsMatrix[e.From];
@@ -219,7 +223,6 @@ namespace OrientedColoring.GraphHelper
             if (weight == 0) return false;
             if (_matrix[from].Any(e => e.To == to)) return false;
             _matrix[from].Add(new Edge(from, to, weight));
-            _matrix[to].Add(new Edge(from, to, weight));
             EdgesCount++;
             return true;
         }
