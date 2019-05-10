@@ -76,5 +76,27 @@ namespace OrientedColoringTests
             g.ColorsMatrix[3] = 2;
             Assert.IsFalse(g.IsColoringValid());
         }
+
+        [TestMethod]
+        public void IsBFSDirectedColoringValid()
+        {
+            Graph g = new Graph(4);
+            g.AddEdge(0, 1);
+            g.AddEdge(1, 2);
+            g.AddEdge(2, 3);
+            g.AddEdge(3, 1);
+            g.BFSDirectedColoring();
+            Assert.IsTrue(g.IsColoringValid());
+        }
+
+        [TestMethod]
+        public void IsImpossibleColoringValid()
+        {
+            Graph g = new Graph(4);
+            g.AddEdge(0, 1);
+            g.AddEdge(1, 0);
+            g.BFSDirectedColoring();
+            Assert.IsFalse(g.IsColoringValid());
+        }
     }
 }
