@@ -28,6 +28,17 @@ namespace OrientedColoring
                     Environment.Exit(0);
                 }
                 Console.WriteLine("Created graph with " + graph.VerticesCount + " vertices and " + graph.EdgesCount + " edges.");
+                int[] result = SmallestLast.Solve(graph);
+                if(result.Any(r => r == -1))
+                {
+                    Console.WriteLine("There does not exist any proper oriented coloring for the given graph");
+                }
+                else
+                {
+                    string ansString = string.Join(" ", result);
+                    Console.WriteLine(ansString);
+                    Console.WriteLine("The oriented chromatic number is " + result.Distinct().Count().ToString());
+                }
             }
 
         }

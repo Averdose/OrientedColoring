@@ -9,13 +9,13 @@ namespace OrientedColoring.GraphHelper
 {
     public class Graph
     {
+
         private List<Edge>[] _matrix;
         public int EdgesCount { get; private set; }
-        public int VerticesCount { get; }
+        public int VerticesCount { get { return _matrix.Length; } }
 
         public Graph(int vertices)
         {
-            VerticesCount = vertices;
             _matrix = new List<Edge>[vertices];
             InitializeMatrix(vertices);
         }
@@ -36,9 +36,9 @@ namespace OrientedColoring.GraphHelper
                 {
                     if(line == 0)
                     {
-                        VerticesCount = int.Parse(s);
-                        _matrix = new List<Edge>[VerticesCount];
-                        InitializeMatrix(VerticesCount);
+                        int verticesCount = int.Parse(s);
+                        _matrix = new List<Edge>[verticesCount];
+                        InitializeMatrix(verticesCount);
                     }
                     else if (line ==  1)
                     {
@@ -85,9 +85,43 @@ namespace OrientedColoring.GraphHelper
             if (_matrix[from].Any(e => e.To == to)
                 || _matrix[to].Any(e => e.From == from)) return false;
             _matrix[from].Add(new Edge(from, to, weight));
-            _matrix[to].Add(new Edge(to, from, weight));
+            _matrix[to].Add(new Edge(from, to, weight));
             EdgesCount++;
             return true;
+        }
+        /// <summary>
+        /// finds the index of vertice with least amount of edges excluding vertices int removed list
+        /// </summary>
+        /// <param name="removed"></param>
+        /// <returns></returns>
+        public int GetSmallestIndex(List<int> removed)
+        {
+            int smallest = int.MaxValue;
+            int index = -1;
+            for(int i = 0; i < _matrix.Length; i++)
+            {
+                if (smallest > _matrix[i].Count && !removed.Any(r => r == i))
+                {
+                    smallest = _matrix[i].Count;
+                    index = i;
+                }
+            }
+            return index;
+        }
+        /// <summary>
+        /// removes vertice from graph at index
+        /// currently rather slow implementation by converting to List
+        /// </summary>
+        /// <param name="index"></param>
+        public void RemoveVertice(int index)
+        {
+            foreach(List<Edge> edges in _matrix)
+            {
+                edges.RemoveAll(e => e.To == index);
+            }
+            List<List<Edge>> temp = new List<List<Edge>>(_matrix);
+            temp.RemoveAt(index);
+            _matrix = temp.ToArray();
         }
 
         public Graph Clone()
