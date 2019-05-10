@@ -22,7 +22,6 @@ namespace OrientedColoring
             bool[,] helper = new bool[graph.VerticesCount, graph.VerticesCount];
             int[] answer = Enumerable.Repeat(-1, graph.VerticesCount).ToArray();
             bool[] visited = new bool[graph.VerticesCount];
-            Graph g = graph.Clone();
             Queue<int> q = new Queue<int>();
             q.Enqueue(graph.GetSmallestIndex(new List<int>()));
             int numVisited = 0;
@@ -31,7 +30,7 @@ namespace OrientedColoring
                 int index = q.Dequeue();
                 visited[index] = true;
                 numVisited++;
-                for (int c = 0; c < g.VerticesCount; c++)
+                for (int c = 0; c < graph.VerticesCount; c++)
                 {
                     if (Utils.IsLegal(c, index, answer, helper, graph))
                     {

@@ -22,18 +22,17 @@ namespace OrientedColoring
         {
             bool[,] helper = new bool[graph.VerticesCount, graph.VerticesCount];
             int[] answer = Enumerable.Repeat(-1, graph.VerticesCount).ToArray();
-            Graph g = graph.Clone();
             List<int> order = new List<int>();
             List<int> removed = new List<int>();
-            while(removed.Count != g.VerticesCount)
+            while(removed.Count != graph.VerticesCount)
             {
-                int index = g.GetSmallestIndex(removed);
+                int index = graph.GetSmallestIndex(removed);
                 order.Insert(0, index);
                 removed.Add(index);
             }
             foreach(int index in order)
             {
-                for(int c = 0; c < g.VerticesCount; c++)
+                for(int c = 0; c < graph.VerticesCount; c++)
                 {
                     if (Utils.IsLegal(c, index, answer, helper, graph))
                     {
