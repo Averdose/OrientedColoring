@@ -31,7 +31,7 @@ namespace OrientedColoring
                 int[] result = SmallestLast.Solve(ref graph);
                 if (result.Any(r => r == -1))
                 {
-                    Console.WriteLine("There does not exist any proper oriented coloring for the given graph");
+                    Console.WriteLine("The Algorithm Couldnt find any proper coloring");
                 }
                 else
                 {
@@ -40,7 +40,6 @@ namespace OrientedColoring
                     Console.WriteLine(ansString);
                     Console.WriteLine("The oriented chromatic number is " + result.Distinct().Count().ToString());
                 }
-                return;
             }
 
         }

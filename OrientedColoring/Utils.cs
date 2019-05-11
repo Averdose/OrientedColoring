@@ -20,10 +20,12 @@ namespace OrientedColoring
         /// if helperColoring[c1,c2] is true than there exists an edge from vertex with color c1 to vertex with color c2</param>
         /// <param name="g"></param>
         /// <returns>information if coloring is legal</returns>
-        public static bool IsLegal(int color, int index, int[] coloring, bool[,] helperColoring, GraphHelper.Graph g)
+        public static bool IsLegal(int color, int index, int[] coloring, bool[,] helperColoring, GraphHelper.Graph g, int depthSearch)
         {
             List<int> outN = g.OutEdges(index).Select(e => e.To).ToList(); ;
             List<int> inN = g.InEdges(index).Select(e => e.From).ToList(); ;
+            List<int> outNColors = new List<int>();
+            List<int> inNColors = new List<int>();
             if (outN.Intersect(inN).Any())
             {
                 return false;
@@ -32,6 +34,7 @@ namespace OrientedColoring
             {
                 if (coloring[v] != -1)
                 {
+                    outNColors.Add(coloring[v]);
                     if (helperColoring[coloring[v], color])
                     {
                         return false;
@@ -46,6 +49,7 @@ namespace OrientedColoring
             {
                 if (coloring[v] != -1)
                 {
+                    inNColors.Add(coloring[v]);
                     if (helperColoring[color, coloring[v]])
                     {
                         return false;
@@ -54,6 +58,44 @@ namespace OrientedColoring
                 if (coloring[v] == color)
                 {
                     return false;
+                }
+            }
+            if (outNColors.Intersect(inNColors).Any())
+            {
+                return false;
+            }
+            if (depthSearch>0)
+            {
+                depthSearch--;
+                int[] coloringCpy = new int[g.VerticesCount];
+                bool[,] helperCpy = new bool[g.VerticesCount, g.VerticesCount];
+                for (int i = 0; i < g.VerticesCount; i++)
+                {
+                    coloringCpy[i] = coloring[i];
+                    for (int j = 0; j < g.VerticesCount; j++)
+                    {
+                        helperCpy[i, j] = helperColoring[i, j];
+                    }
+                }
+                coloringCpy[index] = color;
+                FillHelper(ref helperCpy, coloringCpy, color, index, g);
+                bool found = false;
+                foreach (var v in outN.Union(inN))
+                {
+                    for (int c = 0; c < g.VerticesCount; c++)
+                    {
+                        if (IsLegal(c, v, coloringCpy, helperCpy, g, depthSearch))
+                        {
+                            found = true;
+                            break;
+                        }
+
+                    }
+                    if (!found)
+                    {
+                        return false;
+                    }
+                    found = false;
                 }
             }
             return true;
@@ -85,6 +127,21 @@ namespace OrientedColoring
                     helper[coloring[v], color] = true;
                 }
             }
+        }
+    }
+
+    public class DsaturVertex
+    {
+        int index;
+        int value;
+
+        public int Index { get => index; set => index = value; }
+        public int Value { get => value; set => this.value = value; }
+
+        public DsaturVertex(int _index, int _value)
+        {
+            index = _index;
+            value = _value;
         }
     }
 }

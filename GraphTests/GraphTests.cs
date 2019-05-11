@@ -106,19 +106,6 @@ namespace OrientedColoringTests
         }
 
         [TestMethod]
-        public void IsBreadthDirectedColoringValid()
-        {
-            Graph g = new Graph(4);
-            g.AddEdge(0, 1);
-            g.AddEdge(1, 2);
-            g.AddEdge(2, 3);
-            g.AddEdge(3, 1);
-            int[] coloring = BreadthColoring.Solve(g);
-            g.ColorsMatrix = coloring;
-            Assert.IsTrue(g.IsColoringValid());
-        }
-
-        [TestMethod]
         public void IsSmallestLastDirectedColoringValid()
         {
             Graph g = new Graph(4);
@@ -126,19 +113,69 @@ namespace OrientedColoringTests
             g.AddEdge(1, 2);
             g.AddEdge(2, 3);
             g.AddEdge(3, 1);
-            int[] coloring = SmallestLast.Solve(g);
-            g.ColorsMatrix = coloring;
+            int[] coloring = SmallestLast.Solve(ref g);
+            Assert.IsTrue(g.IsColoringValid());
+        }
+
+        [TestMethod]
+        public void IsDSaturDirectedColoringValid()
+        {
+            Graph g = new Graph(4);
+            g.AddEdge(0, 1);
+            g.AddEdge(1, 2);
+            g.AddEdge(2, 3);
+            g.AddEdge(3, 1);
+            int[] coloring = DSatur.Solve(ref g);
             Assert.IsTrue(g.IsColoringValid());
         }
 
         [TestMethod]
         public void IsImpossibleColoringValid()
         {
-            Graph g = new Graph(4);
+            Graph g = new Graph(2);
             g.AddEdge(0, 1);
             g.AddEdge(1, 0);
             g.BFSDirectedColoring();
             Assert.IsFalse(g.IsColoringValid());
+        }
+
+        [TestMethod]
+        public void IsFiveCycleColoringValidForBFS()
+        {
+            Graph g = new Graph(5);
+            g.AddEdge(0, 1);
+            g.AddEdge(1, 2);
+            g.AddEdge(2, 3);
+            g.AddEdge(3, 4);
+            g.AddEdge(4, 0);
+            g.BFSDirectedColoring();
+            Assert.IsTrue(g.IsColoringValid());
+        }
+
+        [TestMethod]
+        public void IsFiveCycleColoringValidForSmallestLast()
+        {
+            Graph g = new Graph(5);
+            g.AddEdge(0, 1);
+            g.AddEdge(1, 2);
+            g.AddEdge(2, 3);
+            g.AddEdge(3, 4);
+            g.AddEdge(4, 0);
+            SmallestLast.Solve(ref g);
+            Assert.IsTrue(g.IsColoringValid());
+        }
+
+        [TestMethod]
+        public void IsFiveCycleColoringValidForDSatur()
+        {
+            Graph g = new Graph(5);
+            g.AddEdge(0, 1);
+            g.AddEdge(1, 2);
+            g.AddEdge(2, 3);
+            g.AddEdge(3, 4);
+            g.AddEdge(4, 0);
+            DSatur.Solve(ref g);
+            Assert.IsTrue(g.IsColoringValid());
         }
     }
 }

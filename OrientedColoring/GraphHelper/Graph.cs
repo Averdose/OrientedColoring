@@ -242,6 +242,25 @@ namespace OrientedColoring.GraphHelper
         {
             return new Graph(_matrix, EdgesCount);
         }
+        /// <summary>
+        /// returnes index of vertice with largest amount of edges
+        /// </summary>
+        /// <returns></returns>
+        public int GetLargestIndex()
+        {
+            int min = -1;
+            int index = -1;
+            for(int i =0; i< VerticesCount; i++)
+            {
+                int num = InEdges(i).Union(OutEdges(i)).Count();
+                if(num > min)
+                {
+                    index = i;
+                    min = num;
+                }
+            }
+            return index;
+        }
 
         /// <summary>
         /// finds the index of vertice with least amount of edges excluding vertices int removed list
