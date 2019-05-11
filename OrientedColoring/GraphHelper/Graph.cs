@@ -99,7 +99,7 @@ namespace OrientedColoring.GraphHelper
             return true;
         }
 
-        public void BFSDirectedColoring()
+        public int[] BFSDirectedColoring()
         {
             int n = VerticesCount;
             bool[] visited = new bool[n];
@@ -149,6 +149,7 @@ namespace OrientedColoring.GraphHelper
             }
 
             this.ColorsMatrix = newColoring;
+            return newColoring;
         }
 
         private int MinValidColor(List<int> in_neighbours, List<int> out_neighbours, bool[,] colors, int[] newColoring)
