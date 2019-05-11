@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BreadthColoring.cs" />
+    <Compile Include="BFSColoring.cs" />
     <Compile Include="DSatur.cs" />
     <Compile Include="GraphHelper\Edge.cs" />
     <Compile Include="GraphHelper\Graph.cs" />

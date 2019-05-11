@@ -101,7 +101,7 @@ namespace OrientedColoringTests
             g.AddEdge(1, 2);
             g.AddEdge(2, 3);
             g.AddEdge(3, 1);
-            g.BFSDirectedColoring();
+            BFSColoring.Solve(ref g);
             Assert.IsTrue(g.IsColoringValid());
         }
 
@@ -135,7 +135,7 @@ namespace OrientedColoringTests
             Graph g = new Graph(2);
             g.AddEdge(0, 1);
             g.AddEdge(1, 0);
-            g.BFSDirectedColoring();
+            BFSColoring.Solve(ref g);
             Assert.IsFalse(g.IsColoringValid());
         }
 
@@ -148,7 +148,7 @@ namespace OrientedColoringTests
             g.AddEdge(2, 3);
             g.AddEdge(3, 4);
             g.AddEdge(4, 0);
-            g.BFSDirectedColoring();
+            BFSColoring.Solve(ref g);
             Assert.IsTrue(g.IsColoringValid());
         }
 

@@ -35,7 +35,7 @@ namespace OrientedColoring
                 Console.WriteLine("------------------------------------------------------");
 
                 Console.WriteLine("Solving with BFS");
-                result = graph.BFSDirectedColoring();
+                result = BFSColoring.Solve(ref graph);
                 PrintResult(result, graph, "BFS");
                 Console.WriteLine("------------------------------------------------------");
 
