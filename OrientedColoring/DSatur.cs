@@ -31,7 +31,7 @@ namespace OrientedColoring
                 dCount.RemoveAt(dCount.Count -1);
                 for (int c = 0; c < g.VerticesCount; c++)
                 {
-                    if (Utils.IsLegal(c, index, answer, helper, g))
+                    if (Utils.IsLegal(c, index, answer, helper, g, 1))
                     {
                         Utils.FillHelper(ref helper, answer, c, index, g);
                         g.ColorsMatrix[index] = c;

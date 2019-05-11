@@ -28,7 +28,7 @@ namespace OrientedColoring
                     Environment.Exit(0);
                 }
                 Console.WriteLine("Created graph with " + graph.VerticesCount + " vertices and " + graph.EdgesCount + " edges.");
-                int[] result = DSatur.Solve(ref graph);
+                int[] result = SmallestLast.Solve(ref graph);
                 if (result.Any(r => r == -1))
                 {
                     Console.WriteLine("The Algorithm Couldnt find any proper coloring");

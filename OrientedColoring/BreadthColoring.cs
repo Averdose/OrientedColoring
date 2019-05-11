@@ -32,7 +32,7 @@ namespace OrientedColoring
                 numVisited++;
                 for (int c = 0; c < graph.VerticesCount; c++)
                 {
-                    if (Utils.IsLegal(c, index, answer, helper, graph))
+                    if (Utils.IsLegal(c, index, answer, helper, graph, 1))
                     {
                         Utils.FillHelper(ref helper, answer, c, index, graph);
                         answer[index] = c;

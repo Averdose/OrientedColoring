@@ -106,19 +106,6 @@ namespace OrientedColoringTests
         }
 
         [TestMethod]
-        public void IsBreadthDirectedColoringValid()
-        {
-            Graph g = new Graph(4);
-            g.AddEdge(0, 1);
-            g.AddEdge(1, 2);
-            g.AddEdge(2, 3);
-            g.AddEdge(3, 1);
-            int[] coloring = BreadthColoring.Solve(g);
-            g.ColorsMatrix = coloring;
-            Assert.IsTrue(g.IsColoringValid());
-        }
-
-        [TestMethod]
         public void IsSmallestLastDirectedColoringValid()
         {
             Graph g = new Graph(4);
