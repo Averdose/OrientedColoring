@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BreadthColoring.cs" />
+    <Compile Include="DSatur.cs" />
     <Compile Include="GraphHelper\Edge.cs" />
     <Compile Include="GraphHelper\Graph.cs" />
     <Compile Include="Program.cs" />
