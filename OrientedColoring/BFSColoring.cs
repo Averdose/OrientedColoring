@@ -32,21 +32,30 @@ namespace OrientedColoring
                 List<int> in_neighbours = graph.InEdges(vertex).Select(e => e.From).ToList();
                 List<int> out_neighbours = graph.OutEdges(vertex).Select(e => e.To).ToList();
 
-                int c = MinValidColor(graph, in_neighbours, out_neighbours, colors, newColoring);
+                int validColor = -1;
+                for (int c = 0; c < graph.VerticesCount; c++)
+                {
+                    if (Utils.IsLegal(c, vertex, newColoring, colors, graph, 1))
+                    {
+                        validColor = c;
+                        break;
+                    }
+                }
+                
 
-                newColoring[vertex] = c;
+                newColoring[vertex] = validColor;
                 foreach (int i in in_neighbours)
                 {
                     if (newColoring[i] != -1)
                     {
-                        colors[newColoring[i], c] = true;
+                        colors[newColoring[i], validColor] = true;
                     }
                 }
                 foreach (int o in out_neighbours)
                 {
                     if (newColoring[o] != -1)
                     {
-                        colors[c, newColoring[o]] = true;
+                        colors[validColor, newColoring[o]] = true;
                     }
                     if (!visited[o])
                     {
