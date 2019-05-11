@@ -24,6 +24,8 @@ namespace OrientedColoring
         {
             List<int> outN = g.OutEdges(index).Select(e => e.To).ToList(); ;
             List<int> inN = g.InEdges(index).Select(e => e.From).ToList(); ;
+            List<int> outNColors = new List<int>();
+            List<int> inNColors = new List<int>();
             if (outN.Intersect(inN).Any())
             {
                 return false;
@@ -32,6 +34,7 @@ namespace OrientedColoring
             {
                 if (coloring[v] != -1)
                 {
+                    outNColors.Add(coloring[v]);
                     if (helperColoring[coloring[v], color])
                     {
                         return false;
@@ -46,6 +49,7 @@ namespace OrientedColoring
             {
                 if (coloring[v] != -1)
                 {
+                    inNColors.Add(coloring[v]);
                     if (helperColoring[color, coloring[v]])
                     {
                         return false;
@@ -55,6 +59,10 @@ namespace OrientedColoring
                 {
                     return false;
                 }
+            }
+            if (outNColors.Intersect(inNColors).Any())
+            {
+                return false;
             }
             return true;
         }
@@ -85,6 +93,21 @@ namespace OrientedColoring
                     helper[coloring[v], color] = true;
                 }
             }
+        }
+    }
+
+    public class DsaturVertex
+    {
+        int index;
+        int value;
+
+        public int Index { get => index; set => index = value; }
+        public int Value { get => value; set => this.value = value; }
+
+        public DsaturVertex(int _index, int _value)
+        {
+            index = _index;
+            value = _value;
         }
     }
 }
