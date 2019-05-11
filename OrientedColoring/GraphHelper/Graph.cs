@@ -14,6 +14,17 @@ namespace OrientedColoring.GraphHelper
         public int EdgesCount { get; private set; }
         public int VerticesCount { get { return _matrix.Length; } }
 
+        public Graph(List<Edge>[] matrix, int edgeCount)
+        {
+            _matrix = new List<Edge>[matrix.Length];
+            for(int i = 0; i < matrix.Length; i++)
+            {
+                _matrix[i] = new List<Edge>(matrix[i]);
+            }
+            EdgesCount = edgeCount;
+        }
+        
+
         public Graph(int vertices)
         {
             InitializeGraph(vertices);
@@ -226,6 +237,12 @@ namespace OrientedColoring.GraphHelper
             EdgesCount++;
             return true;
         }
+
+        public Graph Clone()
+        {
+            return new Graph(_matrix, EdgesCount);
+        }
+
         /// <summary>
         /// finds the index of vertice with least amount of edges excluding vertices int removed list
         /// </summary>
@@ -254,11 +271,11 @@ namespace OrientedColoring.GraphHelper
         {
             foreach(List<Edge> edges in _matrix)
             {
+                EdgesCount -= edges.Where(e => e.To == index).Count();
                 edges.RemoveAll(e => e.To == index);
             }
-            List<List<Edge>> temp = new List<List<Edge>>(_matrix);
-            temp.RemoveAt(index);
-            _matrix = temp.ToArray();
+            EdgesCount = _matrix[index].Count;
+            _matrix[index] = new List<Edge>();
         }
 
         public List<Edge> InEdges(int vertex)

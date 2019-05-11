@@ -22,10 +22,9 @@ namespace OrientedColoring
         /// <returns>information if coloring is legal</returns>
         public static bool IsLegal(int color, int index, int[] coloring, bool[,] helperColoring, GraphHelper.Graph g)
         {
-            List<Edge> neighbours = g.OutEdges(index).ToList();
-            List<int> outN = neighbours.FindAll(e => e.From == index).Select(e => e.To).ToList();
-            List<int> inN = neighbours.FindAll(e => e.To == index).Select(e => e.From).ToList();
-            if(outN.Intersect(inN).Any())
+            List<int> outN = g.OutEdges(index).Select(e => e.To).ToList(); ;
+            List<int> inN = g.InEdges(index).Select(e => e.From).ToList(); ;
+            if (outN.Intersect(inN).Any())
             {
                 return false;
             }
@@ -70,9 +69,8 @@ namespace OrientedColoring
         /// <param name="g"></param>
         public static void FillHelper(ref bool[,] helper, int[] coloring, int color, int index, Graph g)
         {
-            List<Edge> neighbours = g.OutEdges(index).ToList();
-            List<int> outN = neighbours.FindAll(e => e.From == index).Select(e => e.To).ToList();
-            List<int> inN = neighbours.FindAll(e => e.To == index).Select(e => e.From).ToList();
+            List<int> outN = g.OutEdges(index).Select(e => e.To).ToList(); ;
+            List<int> inN = g.InEdges(index).Select(e => e.From).ToList(); ;
             foreach (int v in outN)
             {
                 if (coloring[v] != -1)
