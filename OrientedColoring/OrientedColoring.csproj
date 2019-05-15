@@ -46,11 +46,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BFSColoring.cs" />
+    <Compile Include="BruteForce.cs" />
     <Compile Include="DSatur.cs" />
     <Compile Include="GraphHelper\Edge.cs" />
     <Compile Include="GraphHelper\Graph.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomGraph.cs" />
     <Compile Include="SmallestLast.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
@@ -79,11 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="evencycle.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="evencycle - Copy.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

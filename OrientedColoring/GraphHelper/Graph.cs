@@ -196,5 +196,20 @@ namespace OrientedColoring.GraphHelper
             }
             return edges;
         }
+        /// <summary>
+        /// prints the graph as a list of edges
+        /// </summary>
+        public void Print()
+        {
+            foreach(List<Edge> edges in _matrix)
+            {
+                string val = "";
+                foreach(Edge edge in edges)
+                {
+                    val += "[" + edge.From + "-" + edge.To + "] ";
+                }
+                Console.WriteLine(val);
+            }
+        }
     }
 }
