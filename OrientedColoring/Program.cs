@@ -2,6 +2,7 @@ using OrientedColoring.GraphHelper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,67 +16,131 @@ namespace OrientedColoring
         const bool USEBRUTEFORCE = true;
         static void Main(string[] args)
         {
-            while (true)
+            if (args.Count() >= 3)
             {
-                /*
-                Console.WriteLine("Input graph file name:");
-                var filename = Console.ReadLine();
-                Console.WriteLine("Reading from file: " + filename);
-                Graph graph = null;
-                try
+                int i = 0;
+                string[] output = new string[5];
+                int graphSize = Convert.ToInt32(args[0]);
+                double saturation = Convert.ToDouble(args[1]);
+                bool isBrute = Convert.ToBoolean(args[2]);
+                string path = "";
+                if (args.Count() == 4)
                 {
-                    graph = new Graph(filename);
+                    path = args[3];
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Encoutered exception: " + e.Message);
-                    Console.ReadKey();
-                    Environment.Exit(0);
-                }
-                */
-                Graph graph = RandomGraph.GenerateGraph(GRAPHSIZE, EDGESATURATION);
+                Graph graph = RandomGraph.GenerateGraph(graphSize, saturation);
                 int[] result;
                 long elapsedMs;
                 Stopwatch watch;
-                Console.WriteLine("Created graph with " + graph.VerticesCount + " vertices and " + graph.EdgesCount + " edges.");
-                if (USEBRUTEFORCE)
+                output[i] = graph.VerticesCount + "," + graph.EdgesCount;
+                i++;
+                if (isBrute)
                 {
-                    Console.WriteLine("------------------------------------------------------");
-                    Console.WriteLine("Solving with BruteForce");
                     watch = System.Diagnostics.Stopwatch.StartNew();
                     result = BruteForce.Solve(ref graph);
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
-
-                    PrintResult(result, graph, elapsedMs, "BruteForce");
+                    bool tmp = graph.IsColoringValid();
+                    output[i] = "BruteForce," + elapsedMs + "," + graph.ColorsMatrix.Distinct().Count() + "," + tmp + "," + string.Join(" ", result);
+                    i++;
                 }
-                Console.WriteLine("------------------------------------------------------");
-                Console.WriteLine("Solving with SmallestLast");
                 watch = System.Diagnostics.Stopwatch.StartNew();
                 result = SmallestLast.Solve(ref graph);
                 watch.Stop();
                 elapsedMs = watch.ElapsedMilliseconds;
-                PrintResult(result, graph, elapsedMs, "SmallestLast");
-                Console.WriteLine("------------------------------------------------------");
+                output[i] = "SL," + elapsedMs + "," + graph.ColorsMatrix.Distinct().Count() + "," + graph.IsColoringValid() + "," + string.Join(" ", result);
+                i++;
 
-                Console.WriteLine("Solving with DSatur");
                 watch = System.Diagnostics.Stopwatch.StartNew();
                 result = DSatur.Solve(ref graph);
                 watch.Stop();
                 elapsedMs = watch.ElapsedMilliseconds;
-                PrintResult(result, graph, elapsedMs, "DSatur");
-                Console.WriteLine("######################################################\n\n");
+                output[i] = "DSatur," + elapsedMs + "," + graph.ColorsMatrix.Distinct().Count() + "," + graph.IsColoringValid() + "," + string.Join(" ", result);
+                i++;
 
-                Console.WriteLine("Solving with BFS");
                 watch = System.Diagnostics.Stopwatch.StartNew();
                 result = BFSColoring.Solve(ref graph);
                 watch.Stop();
                 elapsedMs = watch.ElapsedMilliseconds;
-                PrintResult(result, graph, elapsedMs, "BFS");
-                Console.WriteLine("------------------------------------------------------");
-                return;
+                output[i] ="BFS," +  elapsedMs + "," + graph.ColorsMatrix.Distinct().Count() + "," + graph.IsColoringValid() + "," + string.Join(" ", result);
+                if (args.Count() == 4)
+                {
+                    using (var tw = new StreamWriter(path, false))
+                    {
+                        foreach (string s in output)
+                        {
+                                tw.WriteLine(s);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach(string s in output)
+                    {
+                        Console.WriteLine(s);
+                    }
+                }
             }
+            else
+            {
+                while (true)
+                {
+                    Console.WriteLine("Input graph file name:");
+                    var filename = Console.ReadLine();
+                    Console.WriteLine("Reading from file: " + filename);
+                    Graph graph = null;
+                    try
+                    {
+                        graph = new Graph(filename);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Encoutered exception: " + e.Message);
+                        Console.ReadKey();
+                        Environment.Exit(0);
+                    }
+                    int[] result;
+                    long elapsedMs;
+                    Stopwatch watch;
+                    Console.WriteLine("Created graph with " + graph.VerticesCount + " vertices and " + graph.EdgesCount + " edges.");
+                    if (USEBRUTEFORCE)
+                    {
+                        Console.WriteLine("------------------------------------------------------");
+                        Console.WriteLine("Solving with BruteForce");
+                        watch = System.Diagnostics.Stopwatch.StartNew();
+                        result = BruteForce.Solve(ref graph);
+                        watch.Stop();
+                        elapsedMs = watch.ElapsedMilliseconds;
 
+                        PrintResult(result, graph, elapsedMs, "BruteForce");
+                    }
+                    Console.WriteLine("------------------------------------------------------");
+                    Console.WriteLine("Solving with SmallestLast");
+                    watch = System.Diagnostics.Stopwatch.StartNew();
+                    result = SmallestLast.Solve(ref graph);
+                    watch.Stop();
+                    elapsedMs = watch.ElapsedMilliseconds;
+                    PrintResult(result, graph, elapsedMs, "SmallestLast");
+                    Console.WriteLine("------------------------------------------------------");
+
+                    Console.WriteLine("Solving with DSatur");
+                    watch = System.Diagnostics.Stopwatch.StartNew();
+                    result = DSatur.Solve(ref graph);
+                    watch.Stop();
+                    elapsedMs = watch.ElapsedMilliseconds;
+                    PrintResult(result, graph, elapsedMs, "DSatur");
+                    Console.WriteLine("######################################################\n\n");
+
+                    Console.WriteLine("Solving with BFS");
+                    watch = System.Diagnostics.Stopwatch.StartNew();
+                    result = BFSColoring.Solve(ref graph);
+                    watch.Stop();
+                    elapsedMs = watch.ElapsedMilliseconds;
+                    PrintResult(result, graph, elapsedMs, "BFS");
+                    Console.WriteLine("------------------------------------------------------");
+                    return;
+                }
+            }
         }
 
         private static void PrintResult(int[] result, Graph g, long elapsed, string algorithm)

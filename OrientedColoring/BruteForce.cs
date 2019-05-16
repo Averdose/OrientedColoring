@@ -29,13 +29,14 @@ namespace OrientedColoring
                         if (Utils.IsLegal(c, index, answer, helper, graph, 0))
                         {
                             Utils.FillHelper(ref helper, answer, c, index, graph);
-                            graph.ColorsMatrix[index] = c;
                             answer[index] = c;
                             break;
                         }
                     }
                 }
-                if (!answer.Any(r => r == -1))
+                Graph g = graph.Clone();
+                g.ColorsMatrix = answer;
+                if (g.IsColoringValid())
                 {
                     int chromaticNumber = answer.Distinct().Count();
                     if(chromaticNumber < currentBest)
