@@ -22,64 +22,70 @@ namespace OrientedColoring
                 string[] output = new string[5];
                 int graphSize = Convert.ToInt32(args[0]);
                 double saturation = Convert.ToDouble(args[1]);
-                bool isBrute = Convert.ToBoolean(args[2]);
+                bool useBrute = Convert.ToBoolean(args[2]);
+                Console.WriteLine("Begin program with params: n={0}, saturation={1}, use brute={2}", graphSize, saturation, useBrute);
                 string path = "";
                 if (args.Count() == 4)
                 {
                     path = args[3];
                 }
+                else
+                {
+                    path = "output.txt";
+                }
                 Graph graph = RandomGraph.GenerateGraph(graphSize, saturation);
                 int[] result;
                 long elapsedMs;
                 Stopwatch watch;
-                output[i] = graph.VerticesCount + "," + graph.EdgesCount;
+                output[i] = String.Format("Generated graph with {0} vertices and {1} edges.", graph.VerticesCount, graph.EdgesCount);
+                Console.WriteLine(output[i]);
                 i++;
-                if (isBrute)
-                {
-                    watch = System.Diagnostics.Stopwatch.StartNew();
-                    result = BruteForce.Solve(ref graph);
-                    watch.Stop();
-                    elapsedMs = watch.ElapsedMilliseconds;
-                    bool tmp = graph.IsColoringValid();
-                    output[i] = "BruteForce," + elapsedMs + "," + graph.ColorsMatrix.Distinct().Count() + "," + tmp + "," + string.Join(" ", result);
-                    i++;
-                }
+
                 watch = System.Diagnostics.Stopwatch.StartNew();
                 result = SmallestLast.Solve(ref graph);
                 watch.Stop();
                 elapsedMs = watch.ElapsedMilliseconds;
-                output[i] = "SL," + elapsedMs + "," + graph.ColorsMatrix.Distinct().Count() + "," + graph.IsColoringValid() + "," + string.Join(" ", result);
+                output[i] = String.Format("SL finished in {0} ms. Valid coloring={1} X(G)={2}. Exact coloring={3}", elapsedMs, graph.IsColoringValid(), graph.ColorsMatrix.Distinct().Count(), string.Join(" ", result));
+                Console.WriteLine(output[i]);
                 i++;
 
                 watch = System.Diagnostics.Stopwatch.StartNew();
                 result = DSatur.Solve(ref graph);
                 watch.Stop();
                 elapsedMs = watch.ElapsedMilliseconds;
-                output[i] = "DSatur," + elapsedMs + "," + graph.ColorsMatrix.Distinct().Count() + "," + graph.IsColoringValid() + "," + string.Join(" ", result);
+                output[i] = String.Format("DSATUR finished in {0} ms. Valid coloring={1} X(G)={2}. Exact coloring={3}", elapsedMs, graph.IsColoringValid(), graph.ColorsMatrix.Distinct().Count(), string.Join(" ", result));
+                Console.WriteLine(output[i]);
                 i++;
 
                 watch = System.Diagnostics.Stopwatch.StartNew();
                 result = BFSColoring.Solve(ref graph);
                 watch.Stop();
                 elapsedMs = watch.ElapsedMilliseconds;
-                output[i] ="BFS," +  elapsedMs + "," + graph.ColorsMatrix.Distinct().Count() + "," + graph.IsColoringValid() + "," + string.Join(" ", result);
-                if (args.Count() == 4)
+                output[i] = String.Format("BFS finished in {0} ms. Valid coloring={1} X(G)={2}. Exact coloring={3}", elapsedMs, graph.IsColoringValid(), graph.ColorsMatrix.Distinct().Count(), string.Join(" ", result));
+                Console.WriteLine(output[i]);
+
+                if (useBrute)
                 {
-                    using (var tw = new StreamWriter(path, false))
+                    watch = System.Diagnostics.Stopwatch.StartNew();
+                    result = BruteForce.Solve(ref graph);
+                    watch.Stop();
+                    elapsedMs = watch.ElapsedMilliseconds;
+                    bool tmp = graph.IsColoringValid();
+
+                    output[i] = String.Format("Brute force finished in {0} ms. Valid coloring={1} X(G)={2}. Exact coloring={3}", elapsedMs, graph.IsColoringValid(), graph.ColorsMatrix.Distinct().Count(), string.Join(" ", result));
+                    Console.WriteLine(output[i]);
+                    i++;
+                }
+
+                using (var tw = new StreamWriter(path, false))
+                {
+                    foreach (string s in output)
                     {
-                        foreach (string s in output)
-                        {
-                                tw.WriteLine(s);
-                        }
+                            tw.WriteLine(s);
                     }
                 }
-                else
-                {
-                    foreach(string s in output)
-                    {
-                        Console.WriteLine(s);
-                    }
-                }
+                Console.WriteLine("Finished program. Press key to exit...");
+                Console.ReadKey();
             }
             else
             {
