@@ -220,5 +220,10 @@ namespace OrientedColoring.GraphHelper
                 Console.WriteLine(val);
             }
         }
+
+        public int ChromaticNumber()
+        {
+            return ColorsMatrix.Distinct().Count();
+        }
     }
 }

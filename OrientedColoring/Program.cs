@@ -14,6 +14,18 @@ namespace OrientedColoring
         const int GRAPHSIZE = 6;
         const double EDGESATURATION = 0.6;
         const bool USEBRUTEFORCE = true;
+
+        static void Benchmark(string[] args)
+        {
+            String basepath = "C:\\Users\\nikow\\Desktop\\OrientedColoring\\benchmark\\";
+            //         int max_n = 25;
+                    int avg_iterations = 10;
+            //        int brute_max_n = 8;
+            //        Benchmark.benchmark(max_n, avg_iterations, basepath, brute_max_n);
+            Graph graph = new Graph("evencycle");
+            //Benchmark.benchmarkGraph(graph, avg_iterations, true);
+        }
+
         static void Main(string[] args)
         {
             if (args.Count() >= 3)
@@ -105,11 +117,18 @@ namespace OrientedColoring
                         Console.ReadKey();
                         Environment.Exit(0);
                     }
+
+
                     int[] result;
                     long elapsedMs;
                     Stopwatch watch;
                     Console.WriteLine("Created graph with " + graph.VerticesCount + " vertices and " + graph.EdgesCount + " edges.");
-                    if (USEBRUTEFORCE)
+
+                    Console.WriteLine("Should I run brute force? (y/n)");
+                    var bruteanswer = Console.ReadLine();
+                    bool usebrute = bruteanswer == "y";
+
+                    if (usebrute)
                     {
                         Console.WriteLine("------------------------------------------------------");
                         Console.WriteLine("Solving with BruteForce");
@@ -135,7 +154,7 @@ namespace OrientedColoring
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
                     PrintResult(result, graph, elapsedMs, "DSatur");
-                    Console.WriteLine("######################################################\n\n");
+                    Console.WriteLine("------------------------------------------------------");
 
                     Console.WriteLine("Solving with BFS");
                     watch = System.Diagnostics.Stopwatch.StartNew();
@@ -143,8 +162,8 @@ namespace OrientedColoring
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
                     PrintResult(result, graph, elapsedMs, "BFS");
-                    Console.WriteLine("------------------------------------------------------");
-                    return;
+                    Console.WriteLine("######################################################\n\n");
+
                 }
             }
         }
